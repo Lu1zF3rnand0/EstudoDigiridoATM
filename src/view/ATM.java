@@ -1,22 +1,47 @@
 package view;
 
+/**
+ * The Class ATM.
+ */
 public class ATM {
 
+	/** The user authenticated. */
 	private boolean userAuthenticated; // se usuário foi autenticado
-	private int currentAccountNumber; // número atual da conta de usuário
-	private Screen screen; // Tela do ATM
-	private Keypad keypad; // Teclado do ATM
-	private CashDispenser cashDispenser; // dispensador de cédulas do ATM
-	private DepositSlot depositSlot; // Abertura para depósito do ATM
-	private BankDatabase bankDatabase; // banco de dados de informações de contas
 
+	/** The current account number. */
+	private int currentAccountNumber; // número atual da conta de usuário
+
+	/** The screen. */
+	private final Screen screen; // Tela do ATM
+
+	/** The keypad. */
+	private final Keypad keypad; // Teclado do ATM
+
+	/** The cash dispenser. */
+	private final CashDispenser cashDispenser; // dispensador de cédulas do ATM
+
+	/** The deposit slot. */
+	private final DepositSlot depositSlot; // Abertura para depósito do ATM
+
+	/** The bank database. */
+	private final BankDatabase bankDatabase; // banco de dados de informações de contas
+
+	/** The Constant BALANCE_INQUIRY. */
 	// constantes que correspondem às principais opções de menu
 	private static final int BALANCE_INQUIRY = 1;
+
+	/** The Constant WITHDRAWAL. */
 	private static final int WITHDRAWAL = 2;
+
+	/** The Constant DEPOSIT. */
 	private static final int DEPOSIT = 3;
+
+	/** The Constant EXIT. */
 	private static final int EXIT = 4;
 
-	// construtor sem argumento de ATM inicializa as variáveis de instância
+	/**
+	 * Instantiates a new atm.
+	 */
 	public ATM() {
 		userAuthenticated = false; // usuário não foi autenticado para iniciar
 		currentAccountNumber = 0; // nenhum número atual de conta para iniciar
@@ -27,7 +52,9 @@ public class ATM {
 		bankDatabase = new BankDatabase(); // cria o banco de dados de informações de contas
 	} // fim do construtor ATM sem argumento
 
-	// inicia ATM
+	/**
+	 * Run.
+	 */
 	public void run() {
 		// dá boas-vindas e autentica o usuário; realiza transações
 		while (true) {
@@ -44,7 +71,9 @@ public class ATM {
 		} // fim do while
 	} // fim do método run
 
-	// tenta autenticar o usuário contra o banco de dados
+	/**
+	 * Authenticate user.
+	 */
 	private void authenticateUser() {
 		screen.displayMessage("\nPlease enter your account number: ");
 		int accountNumber = keypad.getInput(); // insere o número de conta
@@ -63,42 +92,47 @@ public class ATM {
 			screen.displayMessageLine("Invalid account number or PIN. Please try again.");
 	} // fim do método authenticateUser
 
-	// exibe o menu principal e realiza transações
+	/**
+	 * Perform transactions.
+	 */
 	private void performTransactions() {
 		// variável local para armazenar a transação atualmente processada
-		Transaction currentTransaction = null;
+		Transaction currentTransaction;
 
 		boolean userExited = false; // usuário optou por não sair
 
 		// faz um loop enquanto o usuário não escolher a opção para sair do sistema
 		while (!userExited) {
-// mostra o menu principal e obtém a seleção de usuário
+		// mostra o menu principal e obtém a seleção de usuário
 			int mainMenuSelection = displayMainMenu();
 
-// decide como prosseguir com base na seleção de menu feita pelo usuário
+			// decide como prosseguir com base na seleção de menu feita pelo usuário
 			switch (mainMenuSelection) {
-// o usuário optou por realizar um entre três tipos de transações
-			case BALANCE_INQUIRY:
-			case WITHDRAWAL:
-			case DEPOSIT:
+				// o usuário optou por realizar um entre três tipos de transações
+				case BALANCE_INQUIRY:
+				case WITHDRAWAL:
+				case DEPOSIT:
 
-// inicializa como o novo objeto do tipo escolhido
-				currentTransaction = createTransaction(mainMenuSelection);
+					// inicializa como o novo objeto do tipo escolhido
+					currentTransaction = createTransaction(mainMenuSelection);
 
-				currentTransaction.execute(); // executa a transação
-				break;
-			case EXIT: // usuário optou por terminar a sessão
-				screen.displayMessageLine("\nExiting the system...");
-				userExited = true; // essa sessão de ATM deve terminar
-				break;
-			default: // usuário não inseriu um inteiro de1a4
-				screen.displayMessageLine("\nYou did not enter a valid selection. Try again.");
-				break;
+					currentTransaction.execute(); // executa a transação
+					break;
+				case EXIT: // usuário optou por terminar a sessão
+					screen.displayMessageLine("\nExiting the system...");
+					userExited = true; // essa sessão de ATM deve terminar
+					break;
+				default: // usuário não inseriu um inteiro de1a4
+					screen.displayMessageLine("\nYou did not enter a valid selection. Try again.");
+					break;
 			} // fim de switch
 		} // fim do while
 	} // fim do método performTransactions
-// exibe o menu principal e retorna uma seleção de entrada
 
+	/**
+	 * Display main menu.
+	 * @return the int
+	 */
 	private int displayMainMenu() {
 		screen.displayMessageLine("\nMain menu:");
 		screen.displayMessageLine("1 - View my balance");
@@ -109,23 +143,29 @@ public class ATM {
 		return keypad.getInput(); // retorna a seleção do usuário
 	} // fim do método displayMainMenu
 
-	// retorna o objeto da subclasse de Transaction especificada
+	/**
+	 * Creates the transaction.
+	 * @param type the type
+	 * @return the transaction
+	 */
 	private Transaction createTransaction(int type) {
 		Transaction temp = null; // variável Transaction temporária
 
 		// determina qual tipo de Transaction criar
 		switch (type) {
-		case BALANCE_INQUIRY: // cria uma nova transação BalanceInquiry
-			temp = new BalanceInquiry(currentAccountNumber, screen, bankDatabase);
-			break;
-		case WITHDRAWAL: // cria uma nova transação Withdrawal
-			temp = new Withdrawal(currentAccountNumber, screen, bankDatabase, keypad, cashDispenser);
-			break;
-		case DEPOSIT: // cria uma nova transação Deposit
-			temp = new Deposit(currentAccountNumber, screen, bankDatabase, keypad, depositSlot);
-			break;
+			case BALANCE_INQUIRY: // cria uma nova transação BalanceInquiry
+				temp = new BalanceInquiry(currentAccountNumber, screen, bankDatabase);
+				break;
+			case WITHDRAWAL: // cria uma nova transação Withdrawal
+				temp = new Withdrawal(currentAccountNumber, screen, bankDatabase, keypad, cashDispenser);
+				break;
+			case DEPOSIT: // cria uma nova transação Deposit
+				temp = new Deposit(currentAccountNumber, screen, bankDatabase, keypad, depositSlot);
+				break;
 		} // fim de switch
 
 		return temp; // retorna o objeto recém-criado
 	} // fim do método createTransaction
 } // fim da classe ATM
+
+

@@ -1,20 +1,44 @@
 package view;
 
-import java.util.Scanner;
+import java.util.Scanner; // program uses Scanner to obtain user input
+import java.util.InputMismatchException;
+
+
+/**
+ * Keypad.java
+ * Represents the keypad of the ATM
+ */
 
 public class Keypad
- {
- private Scanner input; // lê os dados na linha de comando
+{
+ /** The input. */
+ private final Scanner input; // reads data from the command line
 
- // o construtor sem argumento inicializa a classe Scanner
+ /**
+  * No-argument constructor initializes the Scanner
+  */
  public Keypad()
  {
- input = new Scanner( System.in );
- } // fim do construtor Keypad sem argumentos
+  input = new Scanner( System.in );
+ } // end no-argument Keypad constructor
 
- // retorna um valor inteiro inserido pelo usuário
- public int getInput()
+ /**
+  * Return an integer value entered by user
+  * @return the input
+  */
+ public int getInput() throws InputMismatchException
  {
- return input.nextInt(); // supomos que o usuário insira um inteiro
- } // fim do método getInput
- } // fim da classe Keypad
+  try{
+   return input.nextInt(); // we assume that user enters an integer
+  }
+  catch (InputMismatchException inputMismatchException){
+   //System.err.printf("\nException: %s\n", inputMismatchException);
+   input.nextLine();// descarta a entrada para o usu?rio poder entrar novamente.
+   System.out.println("Voc? deve digitar apenas n?meros!\n Por favor, tente novamente.\n");
+  }
+
+  return 0;
+
+ } // end method getInput
+} // end class Keypad
+

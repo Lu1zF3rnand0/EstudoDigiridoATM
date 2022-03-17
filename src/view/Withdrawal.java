@@ -1,119 +1,149 @@
 package view;
+/**
+ * Withdrawal.java
+ * Represents a withdrawal ATM transaction
+ */
+public class Withdrawal extends Transaction
+{
+	private final Keypad keypad; // reference to keypad
+	private final CashDispenser cashDispenser; // reference to cash dispenser
 
-//Withdrawal.java
-// Representa uma transação de saque no ATM
-
-public class Withdrawal extends Transaction {
-	private int amount; // quantia a sacar
-	private Keypad keypad; // referência ao teclado numérico
-	private CashDispenser cashDispenser; // referência ao dispensador de cédulas
-
-	// constante que corresponde à opção cancelar no menu
+	// constant corresponding to menu option to cancel
 	private final static int CANCELED = 6;
 
-	// Construtor de Withdrawal
-	public Withdrawal(int userAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase, Keypad atmKeypad,
-			CashDispenser atmCashDispenser) {
-		// inicializa as variáveis da superclasse
-		super(userAccountNumber, atmScreen, atmBankDatabase);
+	/**
+	 Withdrawal constructor
+	 *
+	 * @param userAccountNumber the user account number
+	 * @param atmScreen the atm screen
+	 * @param atmBankDatabase the atm bank database
+	 * @param atmKeypad the atm keypad
+	 * @param atmCashDispenser the atm cash dispenser
+	 */
+	public Withdrawal( int userAccountNumber, Screen atmScreen,
+					   BankDatabase atmBankDatabase, Keypad atmKeypad,
+					   CashDispenser atmCashDispenser )
+	{
+		// initialize superclass variables
+		super( userAccountNumber, atmScreen, atmBankDatabase );
 
-		// inicializa as referências ao teclado numérico e ao dispensador de cédulas
+		// initialize references to keypad and cash dispenser
 		keypad = atmKeypad;
 		cashDispenser = atmCashDispenser;
-	} // fim do construtor de Withdrawal
+	} // end Withdrawal constructor
+	/**
+	 * Perform transaction
+	 */
+	@Override
+	public void execute()
+	{
+		boolean cashDispensed = false; // cash was not dispensed yet
+		double availableBalance; // amount available for withdrawal
 
-	// realiza a transação
-	public void execute() {
-		boolean cashDispensed = false; // cédulas ainda não foram entregues
-		double availableBalance; // quantia disponível para saque
-
-		// obtém as referências ao banco de dados e tela do banco
+		// get references to bank database and screen
 		BankDatabase bankDatabase = getBankDatabase();
 		Screen screen = getScreen();
 
-		// faz um loop até as cédulas serem entregues ou o usuário cancelar
-		do {
-			// obtém a quantia de um saque escolhida pelo usuário
-			amount = displayMenuOfAmounts();
+		// loop until cash is dispensed or the user cancels
+		do
+		{
+			// obtain a chosen withdrawal amount from the user
+			// amount to withdraw
+			int amount = displayMenuOfAmounts();
 
-			// verifica se o usuário escolheu uma quantia de saque ou cancelou
-			if (amount != CANCELED) {
-				// obtém o saldo disponível na conta envolvida
-				availableBalance = bankDatabase.getAvailableBalance(getAccountNumber());
+			// check whether user chose a withdrawal amount or canceled
+			if ( amount != CANCELED )
+			{
+				// get available balance of account involved
+				availableBalance =
+						bankDatabase.getAvailableBalance( getAccountNumber() );
 
-				// verifica se o usuário tem dinheiro suficiente na conta
-				if (amount <= availableBalance) {
-					// verifica se o dispensador de cédulas tem cédulas suficientes
-					if (cashDispenser.isSufficientCashAvailable(amount)) {
-						// atualiza a conta envolvida para refletir a retirada/saque
-						bankDatabase.debit(getAccountNumber(), amount);
+				// check whether the user has enough money in the account
+				if ( amount <= availableBalance )
+				{
+					// check whether the cash dispenser has enough money
+					if ( cashDispenser.isSufficientCashAvailable(amount) )
+					{
+						// update the account involved to reflect the withdrawal
+						bankDatabase.debit( getAccountNumber(), amount);
 
-						cashDispenser.dispenseCash(amount); // entrega cédulas
-						cashDispensed = true; // cédulas foram entregues
+						cashDispenser.dispenseCash(amount); // dispense cash
+						cashDispensed = true; // cash was dispensed
 
-						// instrui o usuário a pegar as cédulas
-						screen.displayMessageLine("\nYour cash has been" + " dispensed. Please take your cash now.");
-					} // fim do if
-					else // o dispensador de cédulas não tem cédulas suficientes
+						// instruct user to take cash
+						screen.displayMessageLine( "\nYour cash has been" +
+								" dispensed. Please take your cash now." );
+					} // end if
+					else // cash dispenser does not have enough cash
 						screen.displayMessageLine(
-								"\nInsufficient cash available in the ATM." + "\n\nPlease choose a smaller amount.");
-				} // fim do if
-				else // não há dinheiro suficiente disponível na conta do usuário
+								"\nInsufficient cash available in the ATM." +
+										"\n\nPlease choose a smaller amount." );
+				} // end if
+				else // not enough money available in user's account
 				{
 					screen.displayMessageLine(
-							"\nInsufficient funds in your account." + "\n\nPlease choose a smaller amount.");
-				} // fim de else
-			} // fim do if
-			else // o usuário escolheu a opção cancelar no menu
+							"\nInsufficient funds in your account." +
+									"\n\nPlease choose a smaller amount." );
+				} // end else
+			} // end if
+			else // user chose cancel menu option
 			{
-				screen.displayMessageLine("\nCanceling transaction...");
-				return; // retorna ao menu principal porque o usuário cancelou
-			} // fim de else
-		} while (!cashDispensed);
+				screen.displayMessageLine( "\nCanceling transaction..." );
+				return; // return to main menu because user canceled
+			} // end else
+		} while ( !cashDispensed );
 
-	} // fim do método execute
+	} // end method execute
 
-	// exibe um menu de quantias de saques e a opção para cancelar;
-	// retorna a quantia escolhida ou 0 se o usuário escolher cancelar
-	private int displayMenuOfAmounts() {
-		int userChoice = 0; // variável local para armazenar o valor de retorno
+	/**
+	 * Display a menu of withdrawal amounts and the option to cancel;
+	 * Return the chosen amount or 0 if the user chooses to cancel
+	 * @return the int
+	 */
+	private int displayMenuOfAmounts()
+	{
+		int userChoice = 0; // local variable to store return value
 
-		Screen screen = getScreen(); // obtém referência de tela
+		Screen screen = getScreen(); // get screen reference
 
-		// array de quantias que correspondem aos números no menu
-		int amounts[] = { 0, 20, 40, 60, 100, 200 };
+		// array of amounts to correspond to menu numbers
+		int[] amounts = { 0, 20, 40, 60, 100, 200 };
 
-		// faz um loop enquanto nenhuma escolha válida for feita
-		while (userChoice == 0) {
-			// exibe o menu
-			screen.displayMessageLine("\nWithdrawal Menu:");
-			screen.displayMessageLine("1 - $20");
-			screen.displayMessageLine("2 - $40");
-			screen.displayMessageLine("3 - $60");
-			screen.displayMessageLine("4 - $100");
-			screen.displayMessageLine("5 - $200");
-			screen.displayMessageLine("6 - Cancel transaction");
-			screen.displayMessage("\nChoose a withdrawal amount: ");
+		// loop while no valid choice has been made
+		while ( userChoice == 0 )
+		{
 
-			int input = keypad.getInput(); // obtém a entrada do usuário pelo teclado
+			// display the menu
+			screen.displayMessageLine( "\nWithdrawal Menu:" );
+			screen.displayMessageLine( "1 - $20" );
+			screen.displayMessageLine( "2 - $40" );
+			screen.displayMessageLine( "3 - $60" );
+			screen.displayMessageLine( "4 - $100" );
+			screen.displayMessageLine( "5 - $200" );
+			screen.displayMessageLine( "6 - Cancel transaction" );
+			screen.displayMessage( "\nChoose a withdrawal amount: " );
 
-			// determina como prosseguir com base no valor de entrada
-			switch (input) {
-			case 1: // se o usuário escolheu uma quantia de saque
-			case 2: // (isto é, escolheu a opção 1, 2, 3, 4 ou 5), retorna a
-			case 3: // quantia correspondente do array de quantias
-			case 4:
-			case 5:
-				userChoice = amounts[input]; // salva a escolha do usuário
-				break;
-			case CANCELED: // o usuário escolheu cancelar
-				userChoice = CANCELED; // salva a escolha do usuário
-				break;
-			default: // o usuário não inseriu um valor ente1e6
-				screen.displayMessageLine("\nInvalid selection. Try again.");
-			} // fim de switch
-		} // fim do while
+			int input = keypad.getInput(); // get user input through keypad
 
-		return userChoice; // retorna a quantia de saque ou CANCELADA
-	} // fim do método displayMenuOfAmounts
-} // fim da classe Withdrawal
+			// determine how to proceed based on the input value
+			switch ( input )
+			{
+				case 1: // if the user chose a withdrawal amount
+				case 2: // (i.e., chose option 1, 2, 3, 4 or 5), return the
+				case 3: // corresponding amount from amounts array
+				case 4:
+				case 5:
+					userChoice = amounts[ input ]; // save user's choice
+					break;
+				case CANCELED: // the user chose to cancel
+					userChoice = CANCELED; // save user's choice
+					break;
+				default: // the user did not enter a value from 1-6
+					screen.displayMessageLine(
+							"\nInvalid selection. Try again." );
+			} // end switch
+		} // end while
+
+		return userChoice; // return withdrawal amount or CANCELED
+	} // end method displayMenuOfAmounts
+} // end class Withdrawal

@@ -1,53 +1,92 @@
 package view;
 
-//Account.java
-// Representa uma conta bancária
+/**
+ * Account.java
+ * Represents a bank account
+ */
+public class Account
+{
+	/** The account number. */
+	private final int accountNumber; // account number
+	/** The pin. */
+	private final int pin; // PIN for authentication
+	/** The available balance. */
+	private double availableBalance; // funds available for withdrawal
+	/** The total balance. */
+	private double totalBalance; // funds available + pending deposits
 
-public class Account {
-	private int accountNumber; // número da conta
-	private int pin; // PIN para autenticação
-	private double availableBalance; // fundos disponíveis para saque
-	private double totalBalance; // fundos disponíveis + depósitos pendentes
-
-	// O construtor Account inicializa os atributos
-	public Account(int theAccountNumber, int thePIN, double theAvailableBalance, double theTotalBalance) {
+	/**
+	 * Account constructor initializes attributes
+	 * @param theAccountNumber the account number
+	 * @param thePIN the PIN
+	 * @param theAvailableBalance the available balance
+	 * @param theTotalBalance total balance
+	 */
+	public Account( int theAccountNumber, int thePIN,
+					double theAvailableBalance, double theTotalBalance )
+	{
 		accountNumber = theAccountNumber;
 		pin = thePIN;
 		availableBalance = theAvailableBalance;
 		totalBalance = theTotalBalance;
-	} // fim do construtor Account
+	} // end Account constructor
 
-	// determina se um PIN especificado pelo usuário corresponde ao PIN em Account
-	public boolean validatePIN(int userPIN) {
-		if (userPIN == pin)
-			return true;
-		else
-			return false;
-	} // fim do método validatePIN
+	/**
+	 * determines whether a user-specified PIN matches PIN in Account
+	 * @param userPIN the user PIN
+	 * @return true, if successful
+	 */
+	public boolean validatePIN( int userPIN )
+	{
+		return userPIN == pin;
+	} // end method validatePIN
 
-	// retorna o saldo disponível
-	public double getAvailableBalance() {
+	/**
+	 * Gets the available balance.
+	 * @return the available balance
+	 */
+	public double getAvailableBalance()
+	{
 		return availableBalance;
-	} // fim de getAvailableBalance
+	} // end getAvailableBalance
 
-	// retorna o saldo total
-	public double getTotalBalance() {
+	/**
+	 * Gets the total balance.
+	 *
+	 * @return the total balance
+	 */
+	public double getTotalBalance()
+	{
 		return totalBalance;
-	} // fim do método getTotalBalance
+	} // end method getTotalBalance
 
-	// credita uma quantia à conta
-	public void credit(double amount) {
-		totalBalance += amount; // adiciona ao saldo total
-	} // fim do método credit
+	/**
+	 *  credits an amount to the account
+	 * @param amount the amount
+	 */
+	public void credit( double amount )
+	{
+		totalBalance += amount; // add to total balance
+	} // end method credit
 
-	// debita uma quantia da conta
-	public void debit(double amount) {
-		availableBalance -= amount; // subtrai do saldo disponível
-		totalBalance -= amount; // subtrai do saldo total
-	} // fim do método debit
+	/**
+	 * debit an amount to the account
+	 *
+	 * @param amount the amount
+	 */
+	public void debit( double amount )
+	{
+		availableBalance -= amount; // subtract from available balance
+		totalBalance -= amount; // subtract from total balance
+	} // end method debit
 
-	// retorna o número da conta
-	public int getAccountNumber() {
+	/**
+	 * Gets the account number.
+	 *
+	 * @return the account number
+	 */
+	public int getAccountNumber()
+	{
 		return accountNumber;
-	} // fim do método getAccountNumber
-} // fim da classe Account
+	} // end method getAccountNumber
+} // end class Account

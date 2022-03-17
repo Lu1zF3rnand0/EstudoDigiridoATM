@@ -1,32 +1,57 @@
 package view;
 
-public abstract class Transaction {
-	private int accountNumber; // indica conta envolvida
-	private Screen screen; // Tela do ATM
-	private BankDatabase bankDatabase; // banco de dados de informações sobre a conta
+/**
+ * Transaction.java
+ * Abstract superclass Transaction represents an ATM transaction
+ */
+public abstract class Transaction
+{
+	private final int accountNumber; // indicates account involved
+	private final Screen screen; // ATM's screen
+	private final BankDatabase bankDatabase; // account info database
 
-	// Construtor de Transaction invocado pelas subclasses utilizando super()
-	public Transaction(int userAccountNumber, Screen atmScreen, BankDatabase atmBankDatabase) {
+	/**
+	 * Transaction constructor invoked by subclasses using super()
+	 * @param userAccountNumber the user account number
+	 * @param atmScreen atm screen
+	 * @param atmBankDatabase the atm bank database
+	 */
+	public Transaction( int userAccountNumber, Screen atmScreen,
+						BankDatabase atmBankDatabase )
+	{
 		accountNumber = userAccountNumber;
 		screen = atmScreen;
 		bankDatabase = atmBankDatabase;
-	} // fim do construtor de Transaction
+	} // end Transaction constructor
 
-	// retorna o número da conta
-	public int getAccountNumber() {
+	/**
+	 * return account number
+	 * @return account number
+	 */
+	public int getAccountNumber(){
 		return accountNumber;
-	} // fim do método getAccountNumber
+	} // end method getAccountNumber
 
-	// retorna a referência à tela
+
+	/**
+	 * Return reference to screen
+	 * @return the screen
+	 */
 	public Screen getScreen() {
 		return screen;
-	} // fim do método getScreen
+	} // end method getScreen
 
-	// retorno a referência ao banco de dados da instituição financeira
-	public BankDatabase getBankDatabase() {
+	/**
+	 * Return reference to bank database
+	 * @return the bank database
+	 */
+	public BankDatabase getBankDatabase()
+	{
 		return bankDatabase;
-	} // fim do método getBankDatabase
+	} // end method getBankDatabase
 
-	// realiza a transação (sobrescrita por cada subclasse)
+	/**
+	 * Perform the transaction (overridden by each subclass)
+	 */
 	abstract public void execute();
-} // fim da classe Transaction
+} // end class Transaction

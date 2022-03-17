@@ -1,13 +1,18 @@
 package view;
 
-//DepositSlot.java
-//Representa a abertura para depósito do ATM
 
-public class DepositSlot {
-	// indica se o envelope foi recebido (sempre retorna true,
-	// porque isso só é uma simulação do software de uma abertura para depósito
-	// real)
+/**
+ * DepositSlot.java
+ * Represents the deposit slot of the ATM
+ */
+public class DepositSlot
+{
+	/**
+	 * Indicates whether envelope was received (always returns true,
+	 * because this is only a software simulation of a real deposit slot)
+	 * @return true, if is envelope received
+	 */
 	public boolean isEnvelopeReceived() {
-		return true; // o envelope de depósito foi recebido
-	} // fim do método isEnvelopeReceived
-} // fim da classe DepositSlot
+		return true; // deposit envelope was received
+	} // end method isEnvelopeReceived
+} // end class DepositSlot

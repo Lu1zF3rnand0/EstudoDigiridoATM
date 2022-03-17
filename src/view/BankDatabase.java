@@ -1,60 +1,101 @@
 package view;
 
-//BankDatabase.java
-// Representa o banco de dados de informações de contas bancárias
+import java.util.Objects;
 
-public class BankDatabase {
-	private Account accounts[]; // array de Accounts
+/**
+ * BankDatabase.java
+ * Represents the bank account information database
+ * @author Luiz
+ */
+public class BankDatabase
+{
+	private final Account[] accounts; // array of Accounts
 
-	// construtor BankDatabase sem argumento inicializa as contas
-	public BankDatabase() {
-		accounts = new Account[2]; // apenas 2 contar para teste
-		accounts[0] = new Account(12345, 54321, 1000.0, 1200.0);
-		accounts[1] = new Account(98765, 56789, 200.0, 200.0);
-	} // fim do construtor BankDatabase sem argumento
+	/**
+	 * No-argument BankDatabase constructor initializes accounts
+	 */
+	public BankDatabase()
+	{
+		accounts = new Account[ 2 ]; // just 2 accounts for testing
+		accounts[ 0 ] = new Account( 12345, 54321, 1000.0, 1200.0 );
+		accounts[ 1 ] = new Account( 98765, 56789, 200.0, 200.0 );
+	} // end no-argument BankDatabase constructor
 
-	// recupera o objeto Account que contém o número de conta especificado
-	private Account getAccount(int accountNumber) {
-		// faz um loop pelas contas procurando uma correspondência com o número de conta
-		for (Account currentAccount : accounts) {
-			// retorna a conta atual se uma correspondência for localizada
-			if (currentAccount.getAccountNumber() == accountNumber)
+	/**
+	 * retrieve Account object containing specified account number
+	 * @param accountNumber the account number
+	 * @return the account
+	 */
+	private Account getAccount( int accountNumber )
+	{
+		// loop through accounts searching for matching account number
+		for ( Account currentAccount : accounts )
+		{
+			// return current account if match found
+			if ( currentAccount.getAccountNumber() == accountNumber )
 				return currentAccount;
-		} // fim do for
+		} // end for
 
-		return null; // se nenhuma correspondência com uma conta foi localizada, retorna null
-	} // fim do método getAccount
+		return null; // if no matching account was found, return null
+	} // end method getAccount
 
-	// determina se número da conta e PIN especificados pelo usuário correspondem
-	// àqueles de uma conta no banco de dados
-	public boolean authenticateUser(int userAccountNumber, int userPIN) {
-		// tenta recuperar a conta com o número da conta
-		Account userAccount = getAccount(userAccountNumber);
+	/**
+	 * Determine whether user-specified account number and PIN
+	 * match those of an account in the database
+	 * @param userAccountNumber the user account number
+	 * @param userPIN the user PIN
+	 * @return true, if successful
+	 */
+	public boolean authenticateUser( int userAccountNumber, int userPIN )
+	{
+		// attempt to retrieve the account with the account number
+		Account userAccount = getAccount( userAccountNumber );
 
-		// se a conta existir, retorna o resultado do método validatePIN de Account
-		if (userAccount != null)
-			return userAccount.validatePIN(userPIN);
+		// if account exists, return result of Account method validatePIN
+		if ( userAccount != null )
+			return userAccount.validatePIN( userPIN );
 		else
-			return false; // número de conta não foi localizado, portanto retorna false
-	} // fim do método authenticateUser
+			return false; // account number not found, so return false
+	} // end method authenticateUser
 
-	// retorna o saldo disponível de Account com o número da conta especificado
-	public double getAvailableBalance(int userAccountNumber) {
-		return getAccount(userAccountNumber).getAvailableBalance();
-	} // fim do método getAvailableBalance
+	/**
+	 * Return available balance of Account with specified account number
+	 * @param userAccountNumber the user account number
+	 * @return the available balance
+	 */
+	public double getAvailableBalance( int userAccountNumber )
+	{
+		return Objects.requireNonNull(getAccount(userAccountNumber)).getAvailableBalance();
+	} // end method getAvailableBalance
 
-	// retorna o saldo total de Account com o número da conta especificado
-	public double getTotalBalance(int userAccountNumber) {
-		return getAccount(userAccountNumber).getTotalBalance();
-	} // fim do método getTotalBalance
+	/**
+	 * Gets the total balance.
+	 * return total balance of Account with specified account number
+	 * @param userAccountNumber the user account number
+	 * @return the total balance
+	 */
+	public double getTotalBalance( int userAccountNumber )
+	{
+		return Objects.requireNonNull(getAccount(userAccountNumber)).getTotalBalance();
+	} // end method getTotalBalance
 
-	// credita uma quantia a Account com o número da conta especificado
-	public void credit(int userAccountNumber, double amount) {
-		getAccount(userAccountNumber).credit(amount);
-	} // fim do método credit
+	/**
+	 * Credit an amount to Account with specified account number
+	 * @param userAccountNumber the user account number
+	 * @param amount amount the amount
+	 */
+	public void credit( int userAccountNumber, double amount )
+	{
+		Objects.requireNonNull(getAccount(userAccountNumber)).credit( amount );
+	} // end method credit
 
-	// debita uma quantia da Account com número da conta especificado
-	public void debit(int userAccountNumber, double amount) {
-		getAccount(userAccountNumber).debit(amount);
-	} // fim do método debit
-} // fim da classe BankDatabase
+	/**
+	 * Debit an amount from Account with specified account number
+	 * @param userAccountNumber the user account number
+	 * @param amount the amount
+	 */
+	public void debit( int userAccountNumber, double amount )
+	{
+		Objects.requireNonNull(getAccount(userAccountNumber)).debit( amount );
+	} // end method debit
+} // end class BankDatabase
